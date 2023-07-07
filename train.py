@@ -2,9 +2,9 @@ import argparse
 import logging
 import math
 import cPickle
-from ..corpus import Vocabulary, read_corpus
-from ..prob import Uniform
-from model import LDA, LPYA
+from corpus import Vocabulary, read_corpus
+from prob import Uniform
+from pytm import LDA, LPYA
 
 mh_iter = 100 # number of Metropolis-Hastings sampling iterations
 
