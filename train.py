@@ -1,7 +1,8 @@
 import argparse
 import logging
+import heapq
 import math
-import cPickle
+import pickle
 from corpus import Vocabulary, read_corpus
 from prob import Uniform
 from pytm import LDA, LPYA
@@ -61,10 +62,20 @@ def main():
     logging.info('Training model with %d topics', args.topics)
     run_sampler(model, training_corpus, args.iter)
 
+
+    
+    for i, topic in enumerate(model.topic_word):
+        print('Topic {0}'.format(i))
+        word_prob = ((topic.prob(w), w) for w in range(len(vocabulary)))
+        for prob, w in heapq.nlargest(10, word_prob):
+            print(u'{0} {1}'.format(vocabulary[w], prob).encode('utf8'))
+        print('---------')
+
+
     if args.output:
         model.vocabulary = vocabulary
         with open(args.output, 'w') as f:
-            cPickle.dump(model, f, protocol=-1)
+            pickle.dump(model, f, protocol=-1)
 
 if __name__ == '__main__':
     main()

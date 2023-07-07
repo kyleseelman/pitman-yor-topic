@@ -54,7 +54,7 @@ class DirichletMultinomial(object):
 
     def log_likelihood(self, full=False):
         ll = (math.lgamma(self.K * self.alpha) - math.lgamma(self.K * self.alpha + self.N)
-                + sum(math.lgamma(self.alpha + self.count[k]) for k in xrange(self.K))
+                + sum(math.lgamma(self.alpha + self.count[k]) for k in range(self.K))
                 - self.K * math.lgamma(self.alpha))
         if full:
             ll += self.prior.log_likelihood()

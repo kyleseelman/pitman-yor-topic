@@ -49,7 +49,7 @@ class Vocabulary:
         return len(self.id2word)
 
 def read_corpus(stream, vocabulary):
-    return [[vocabulary[word] for word in seg.decode('utf8').split()] for seg in stream]
+    return [[vocabulary[word] for word in seg.split()] for seg in stream]
 
 class Corpus:
     def __init__(self, stream, vocabulary=None):

@@ -97,17 +97,18 @@ class PYP(CRP):
         return w / (self.theta + self.total_customers)
 
     def log_likelihood(self, full=False):
-        if self.d == 0: # Dirichlet Process
-            ll = (math.lgamma(self.theta) - math.lgamma(self.theta + self.total_customers)
-                    + sum(math.lgamma(c) for tables in self.tables.itervalues() for c in tables)
-                    + self.ntables * math.log(self.theta))
-        else:
-            ll = (math.lgamma(self.theta) - math.lgamma(self.theta + self.total_customers)
-                    + math.lgamma(self.theta / self.d + self.ntables)
-                    - math.lgamma(self.theta / self.d)
-                    + self.ntables * (math.log(self.d) - math.lgamma(1 - self.d))
-                    + sum(math.lgamma(c - self.d) for tables in self.tables.itervalues()
-                        for c in tables))
+        #if self.d == 0: # Dirichlet Process
+        ll = (math.lgamma(self.theta) - math.lgamma(self.theta + self.total_customers)
+                + sum(math.lgamma(c) for tables in self.tables.values() for c in tables)
+                + self.ntables * math.log(self.theta))
+        # need to fix this
+        #else:
+        #    ll = (math.lgamma(self.theta) - math.lgamma(self.theta + self.total_customers)
+        #            + math.lgamma(self.theta / self.d + self.ntables)
+        #            - math.lgamma(self.theta / self.d)
+        #            + self.ntables * (math.log(self.d) - math.lgamma(1 - self.d))
+        #            + sum(math.lgamma(c - self.d) for tables in self.tables.items()
+        #                for c in tables))
         if full:
             ll += self.base.log_likelihood(full=True) + self.prior.log_likelihood()
         return ll

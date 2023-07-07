@@ -8,7 +8,7 @@ class TopicModel(object):
         self.n_topics = n_topics
 
     def increment(self, doc, word):
-        z = mult_sample((k, self.topic_prob(doc, word, k)) for k in xrange(self.n_topics))
+        z = mult_sample((k, self.topic_prob(doc, word, k)) for k in range(self.n_topics))
         self.document_topic[doc].increment(z)
         self.topic_word[z].increment(word)
         return z
@@ -21,7 +21,7 @@ class TopicModel(object):
         return self.document_topic[doc].prob(k) * self.topic_word[k].prob(word)
 
     def prob(self, doc, word):
-        return sum(self.topic_prob(doc, word, k) for k in xrange(self.n_topics))
+        return sum(self.topic_prob(doc, word, k) for k in range(self.n_topics))
 
     def map_estimate(self, n_words):
         for topic in self.topic_word:
@@ -32,8 +32,8 @@ class LDA(TopicModel):
         super(LDA, self).__init__(n_topics)
         self.alpha = GammaPrior(1.0, 1.0, 1.0) # alpha = 1
         self.beta = GammaPrior(1.0, 1.0, 1.0) # alpha = 1
-        self.document_topic = [DirichletMultinomial(n_topics, self.alpha) for _ in xrange(n_docs)]
-        self.topic_word = [DirichletMultinomial(n_words, self.beta) for _ in xrange(n_topics)]
+        self.document_topic = [DirichletMultinomial(n_topics, self.alpha) for _ in range(n_docs)]
+        self.topic_word = [DirichletMultinomial(n_words, self.beta) for _ in range(n_topics)]
 
     def log_likelihood(self):
         return (sum(d.log_likelihood() for d in self.document_topic)
@@ -60,10 +60,10 @@ class LPYA(TopicModel):
         self.alpha = GammaPrior(1.0, 1.0, 1.0) # alpha = 1
         self.topic_base = topic_base
         # Calls prob.py to generate the initial document-topic distribution 
-        self.document_topic = [DirichletMultinomial(n_topics, self.alpha) for _ in xrange(n_docs)]
+        self.document_topic = [DirichletMultinomial(n_topics, self.alpha) for _ in range(n_docs)]
         # Calls pyp.py to start the actual Pitman-Yor process
         self.topic_word = [PYP(self.topic_base, PYPPrior(1.0, 1.0, 1.0, 1.0, 0.8, 1.0)) 
-                for _ in xrange(n_topics)]
+                for _ in range(n_topics)]
 
     def log_likelihood(self):
         return (sum(d.log_likelihood() for d in self.document_topic)
