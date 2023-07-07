@@ -1,7 +1,7 @@
 import logging
-from ..prob import mult_sample, DirichletMultinomial
-from ..prior import GammaPrior, PYPPrior, stuple
-from ..pyp import PYP
+from prob import mult_sample, DirichletMultinomial
+from prior import GammaPrior, PYPPrior, stuple
+from pyp import PYP
 
 class TopicModel(object):
     def __init__(self, n_topics):
