@@ -52,12 +52,16 @@ class LDA(TopicModel):
         return ('LDA(#topics={self.n_topics} '
                 '| alpha={self.alpha}, beta={self.beta})').format(self=self)
 
+# This is the class for the Pitman-Yor topic model 
 class LPYA(TopicModel):
     def __init__(self, n_topics, n_docs, topic_base):
         super(LPYA, self).__init__(n_topics)
+        # Calls prior.py to generate the Gamma prior 
         self.alpha = GammaPrior(1.0, 1.0, 1.0) # alpha = 1
         self.topic_base = topic_base
+        # Calls prob.py to generate the initial document-topic distribution 
         self.document_topic = [DirichletMultinomial(n_topics, self.alpha) for _ in xrange(n_docs)]
+        # Calls pyp.py to start the actual Pitman-Yor process
         self.topic_word = [PYP(self.topic_base, PYPPrior(1.0, 1.0, 1.0, 1.0, 0.8, 1.0)) 
                 for _ in xrange(n_topics)]
 
@@ -67,6 +71,7 @@ class LPYA(TopicModel):
                 + sum(t.log_likelihood() + t.prior.log_likelihood() for t in self.topic_word)
                 + self.topic_base.log_likelihood(full=True))
 
+    # at the end of each iteraiton, resampling to update hyperaparameters
     def resample_hyperparemeters(self, n_iter):
         ar = stuple((0, 0))
         logging.info('Resampling topic-word PYP base hyperparameters')
